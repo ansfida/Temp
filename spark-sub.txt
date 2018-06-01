@@ -1,0 +1,19 @@
+#discretization
+
+/usr/bin/spark-submit --py-files /home/hadoop/input/discretization.zip --master yarn --deploy-mode client /home/hadoop/input/discretization.py -input s3://day.edu/inputData/CensusACS/PARSED/individuals/part-00000 -outputDir /home/hadoop/outputDir11 -headers /home/hadoop/input/columnSpecs.txt -include /home/hadoop/input/discretization.zip -debug 10
+
+#pums-parser
+
+/usr/bin/spark-submit --py-files /home/hadoop/pums-parser/pumsParserRunner.zip /home/hadoop/pums-parser/pumsParserRunner.py --master yarn --deploy-mode cluster -inputDir /home/hadoop/pums-parser/inputDir -outputDir /home/hadoop/pums-parser/pums3_clus -config /home/hadoop/pums-parser/pumsParserConfig.json -naics /home/hadoop/pums-parser/2017-NAICS-Descriptions.txt -splitDir /home/hadoop/pums-parser/split/ -debug 10 | tee pums3_clus.txt
+
+/usr/bin/spark-submit --py-files /home/hadoop/pums-parser/pumsParserRunner.zip /home/hadoop/pums-parser/pumsParserRunner.py --master yarn --deploy-mode client -inputDir /home/hadoop/pums-parser/inputDir -outputDir /home/hadoop/pums-parser/outputDir30 -config /home/hadoop/pums-parser/pumsParserConfig.json -naics /home/hadoop/pums-parser/2017-NAICS-Descriptions.txt -splitDir /home/hadoop/pums-parser/split/ -debug 10 | tee outputDir30.txt
+
+#newAmericas
+
+/usr/bin/spark-submit --py-files /home/hadoop/newAmerica/newAmerica.zip /home/hadoop/newAmerica/newAmericaParser.py --master yarn --deploy-mode cluster -outputDir /home/hadoop/newAmerica5 -include /home/hadoop/newAmerica/newAmerica.zip -data state -data institution -debug 10 | tee AmericanOut5.txt
+
+
+# checking logs
+
+hdfs dfs -cat /var/log/spark/apps/application_1526398426944_0058
+hdfs dfs -cat /home/hadoop/pums-parser/outputDir8/ss15pus_sorted_0000_csv/part-00003
